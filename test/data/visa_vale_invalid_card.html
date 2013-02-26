@@ -1,0 +1,105 @@
+
+
+
+
+
+
+
+
+
+
+
+<!-- <link rel="stylesheet" href="/css/estilos.css">  -->
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<link href="/inst/css/Style.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body style="background:transparent">
+		<form id="frmSaldoExtratoPFS" action="">
+			<input type="hidden" id="numeroCartao" name="numeroCartao" value="2412318251927412">
+			<input type="hidden" id="periodoSelecionado" name="periodoSelecionado" value="0">
+			<input type="hidden" id="origem" name="origem" value="" />
+
+	        <table class="consulta " width="545">
+				<tr class="rowTable">
+					<td width="300px">Data da consulta:</td>
+					<td class="corUm" colspan="2" align="left">31/01/2013 - 22:25:36</td>
+				</tr>
+	            <tr class="rowTable">
+	            	<td width="300px">N&uacute;mero do cart&atilde;o:</td>
+	            	<td class="corUm" colspan="2" align="left">2412318251927412</td>
+	            </tr>
+	            <tr class="rowTable">
+	            	<td width="300px">Data da &uacute;ltima disponibiliza&ccedil;&atilde;o do benef&iacute;cio:</td>
+	            	<td class="corUm" align="left"></td>
+	            	<td class="corUm" align="right">Valor:R$0,00</td>
+	            </tr>
+	            <tr class="rowTable">
+	            	<td width="300px">Data da pr&oacute;xima disponibiliza&ccedil;&atilde;o do benef&iacute;cio:</td>
+	            	<td class="corUm" align="left"></td>
+	            	<td class="corUm" align="right">Valor:R$0,00</td>
+	            </tr>
+	            <tr class="rowTable">
+	            	<td colspan="2">
+			            <label>M&ecirc;s:
+
+			            </label>
+		            </td>
+				</tr>
+			</table>
+
+			<br />
+	        <img src="/inst/images/footAreaLong.gif" class="separador" style="margin-left: 33px;" alt="separador" title="separador" />
+	        <br class="clear" />
+
+
+
+						<table class="consulta " width="545">
+							<tr class="topTable"><td style="width:100%;" align="center">Cartão inválido.</td></tr>
+						</table>
+
+			        <table class="consulta " width="545">
+			        	<tr class="topTable"><td style="width:50px">Data</td><td style="width:400px">Hist&oacute;rico</td><td class="corUm" style="width:50px" align="right">Valor</td></tr>
+					</table>
+			        <table class="consulta " width="545">
+
+					</table>
+			        <table class="consulta " width="545">
+			        	<tr class="rowTable"><td class="corUm fontWeightDois" align="right">Saldo dispon&iacute;vel:</td><td class="corUm fontWeightDois" style="width:80px" align="right">R$ 0,00</td></tr>
+					</table>
+
+	        <br class="clear" />
+	        <img src="/inst/images/footAreaLong.gif" class="separador" style="margin-left: 33px;" alt="separador" title="separador" />
+
+	        <div class="areaTipoSeisSub">
+	        	<p>Extrato para simples confer&ecirc;ncia - sujeito a altera&ccedil;&otilde;es</p>
+	        </div>
+
+		</form>
+		<script>
+			function submit_form() {
+				var comboPeriodo = document.getElementById('comboPeriodo');
+				if(comboPeriodo && comboPeriodo.value != ''){
+
+					comboPeriodo.disabled = 'disabled';
+					var listaForms = document.getElementsByTagName('form');
+
+					if(listaForms){
+						for(var i=0; i < listaForms.length; i++){
+							var frm = listaForms.item(i);
+							if(frm.id == 'frmSaldoExtratoPFS'){
+								frm.periodoSelecionado.value = comboPeriodo.value;
+								frm.submit();
+							}
+						}
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
+	
