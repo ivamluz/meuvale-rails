@@ -1,12 +1,11 @@
 module Exceptions
   class InvalidCardNumberException < StandardError
-      attr_reader :message, :number
-      def initialize(number, message = nil)
+      attr_reader :message
+      def initialize(message = nil)
         if message.nil?
-          message = "InvalidCardNumberException: The provided card number is not valid: " + number.to_s()
+          message = "InvalidCardNumberException: The provided card number is not valid"
         end
 
-        @number = number
         @message = message
       end
   end

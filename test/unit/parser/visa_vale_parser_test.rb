@@ -5,13 +5,18 @@ class VisaValeParserTest < ActiveSupport::TestCase
     @parser = Parsers::VisaValeParser.new
   end
  
-  # called after every single test
   def teardown
     @parser = nil
   end
 
-  def get_invalid_card_html
+  def get_invalid_card_number_html
     file_path = Rails.root.join('test', 'data', 'visa_vale_invalid_card.html').to_s()
+
+    File.read(file_path)
+  end
+
+  def get_response_with_error_html
+    file_path = Rails.root.join('test', 'data', 'visa_vale_invalid_result.html').to_s()
 
     File.read(file_path)
   end
@@ -32,8 +37,15 @@ class VisaValeParserTest < ActiveSupport::TestCase
 
   test "exception is raised for invalid card number" do
     exception = assert_raise(Exceptions::InvalidCardNumberException) do
-      @parser.prepare(self.get_invalid_card_html())
+      @parser.prepare(self.get_invalid_card_number_html())
       @parser.parse()
     end
   end
+
+  test "exception is raised when invalid error is returned from provider" do
+    exception = assert_raise(Exceptions::InvalidResultReturnedFromProviderException) do
+      @parser.prepare(self.get_response_with_error_html())
+      @parser.parse()
+    end
+  end  
 end
