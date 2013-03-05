@@ -6,6 +6,7 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :development do
+  gem 'annotate', '2.5.0'
   gem 'sqlite3', '1.3.5'
 end
 
