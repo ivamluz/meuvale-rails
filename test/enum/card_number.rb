@@ -1,0 +1,6 @@
+module Enum
+  class CardNumber
+    VISA_VALE_VALID_NUMBER   = '4058760402961025'
+    VISA_VALE_INVALID_NUMBER = '2412318251927412'
+  end
+end
