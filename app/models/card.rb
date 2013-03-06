@@ -15,9 +15,22 @@
 #
 
 class Card < ActiveRecord::Base
+  TYPES = {
+    :visa_vale => 'visa_vale'
+  }
+
   attr_accessible :card_type, :number,
                   :last_charged_at, :available_balance, 
                   :last_charge_amount, :next_charge_amount
 
-  validates :card_type, :number, presence: true
+  validates :card_type, 
+            presence: true, length: { maximum: 20 }, inclusion: { in: TYPES.values }
+  validates :number, presence: true, length: { maximum: 30 }, format: { with: /^[0-9]{16}$/ }
+
+  validates :available_balance, :last_charge_amount, :next_charge_amount,
+            numericality: { greater_than_or_equal_to: 0 },
+            format: { with: /^\d+(\.\d{1,2})?$/ },
+            allow_blank: true
+
+  validates_date :last_charged_at, :next_charge, allow_nil: true
 end

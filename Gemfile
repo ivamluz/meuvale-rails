@@ -22,6 +22,8 @@ end
 
 gem 'jquery-rails', '2.0.2'
 gem 'nokogiri', '1.5.5'
+gem 'validates_date_time', 
+    :git => 'git://github.com/sofatutor/validates_date_time', :branch => 'rails-3'
 
 group :production do
   gem 'pg', '0.12.2'

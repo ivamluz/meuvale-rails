@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/sofatutor/validates_date_time
+  revision: 3f27d414bb47e064341af3a623d40ebd2c2b5c6e
+  branch: rails-3
+  specs:
+    validates_date_time (1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -116,3 +123,4 @@ DEPENDENCIES
   sass-rails (= 3.2.5)
   sqlite3 (= 1.3.5)
   uglifier (= 1.2.3)
+  validates_date_time!
