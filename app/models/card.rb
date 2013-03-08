@@ -19,6 +19,8 @@ class Card < ActiveRecord::Base
     :visa_vale => 'visa_vale'
   }
 
+  has_many :transactions, :class_name => "CardTransaction"
+
   attr_accessible :card_type, :number,
                   :last_charged_at, :available_balance, 
                   :last_charge_amount, :next_charge_amount

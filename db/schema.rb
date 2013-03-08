@@ -11,7 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130305004928) do
+ActiveRecord::Schema.define(:version => 20130308010330) do
+
+  create_table "card_transactions", :force => true do |t|
+    t.integer  "card_id"
+    t.date     "date",                                                    :null => false
+    t.string   "description", :limit => 30,                               :null => false
+    t.decimal  "amount",                    :precision => 6, :scale => 2, :null => false
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
+  end
+
+  add_index "card_transactions", ["amount"], :name => "index_card_transactions_on_amount"
+  add_index "card_transactions", ["card_id", "date"], :name => "index_card_transactions_on_card_id_and_date"
+  add_index "card_transactions", ["description"], :name => "index_card_transactions_on_description"
 
   create_table "cards", :force => true do |t|
     t.string   "card_type",          :limit => 20,                               :null => false
