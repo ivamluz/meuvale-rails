@@ -37,6 +37,8 @@ class CardTransactionTest < ActiveSupport::TestCase
     assert(@transaction.respond_to? :date)
     assert(@transaction.respond_to? :description)
     assert(@transaction.respond_to? :amount)
+    assert(@transaction.respond_to? :card)
+    assert(@transaction.respond_to? :card_id)
   end
 
   test "non nullable fields dont accept empty values" do
@@ -174,4 +176,19 @@ test "invalid date formats validation" do
   test "transaction belongs to right card" do
     assert(@transaction.card == @card)
   end
+
+  test "card id is mandatory" do
+    transaction = CardTransaction.new(
+      date: Time.now,
+      description: 'Thiane',
+      amount: 22.22
+    )
+
+    assert(!transaction.valid?)
+  end
+
+  test "transaction relationship with card" do
+    assert(@transaction.card == @card)
+  end
+
 end

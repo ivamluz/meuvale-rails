@@ -25,5 +25,8 @@ class CardTransaction < ActiveRecord::Base
             numericality: { greater_than: 0 },
             format: { with: /^\d+(\.\d{1,2})?$/ }
 
+  validates :card_id,
+            presence: true
+
   validates_date :date
 end

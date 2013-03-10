@@ -8,6 +8,13 @@ gem 'rails', '3.2.8'
 group :development do
   gem 'annotate', '2.5.0'
   gem 'sqlite3', '1.3.5'
+  gem 'rspec-rails', '2.6.1'
+end
+
+group :test do
+  gem 'factory_girl_rails', '1.4.0'
+  gem 'rspec-rails', '2.6.1'
+  gem 'webrat', '0.7.1'
 end
 
 

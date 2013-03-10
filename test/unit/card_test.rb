@@ -38,6 +38,7 @@ class CardTest < ActiveSupport::TestCase
     assert(@card.respond_to? :last_charge_amount)
     assert(@card.respond_to? :next_charge)
     assert(@card.respond_to? :next_charge_amount)
+    assert(@card.respond_to? :transactions)
   end
 
   test "non nullable fields dont accept empty values" do
