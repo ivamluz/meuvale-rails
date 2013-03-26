@@ -18,14 +18,15 @@ require 'test_helper'
 
 class CardTest < ActiveSupport::TestCase
   def setup
-    @card = Card.new
-    @card.card_type = 'visa_vale'
-    @card.number = '1234567890123456'
-    @card.available_balance = 223.25
-    @card.last_charged_at = Date.parse('26/01/2013')
-    @card.last_charge_amount = 220.00
-    @card.next_charge = Date.parse('26/02/2013')
-    @card.next_charge_amount = 260.00
+    @card = Card.new(
+      card_type: Card::TYPES[:visa_vale],
+      number: '1234567890123456',
+      available_balance: 223.25,
+      last_charged_at: Date.parse('26/01/2013'),
+      last_charge_amount: 220.00,
+      next_charge: Date.parse('26/02/2013'),
+      next_charge_amount: 260.00,
+    )
 
     @original_card = Marshal::load(Marshal.dump(@card))
   end

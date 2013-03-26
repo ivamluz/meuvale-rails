@@ -190,5 +190,4 @@ test "invalid date formats validation" do
   test "transaction relationship with card" do
     assert(@transaction.card == @card)
   end
-
 end

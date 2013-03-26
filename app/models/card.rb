@@ -21,9 +21,9 @@ class Card < ActiveRecord::Base
 
   has_many :transactions, :class_name => "CardTransaction"
 
-  attr_accessible :card_type, :number,
-                  :last_charged_at, :available_balance, 
-                  :last_charge_amount, :next_charge_amount
+  attr_accessible :card_type, :number, :available_balance,
+                  :last_charged_at, :last_charge_amount,
+                  :next_charge, :next_charge_amount
 
   validates :card_type, 
             presence: true, length: { maximum: 20 }, inclusion: { in: TYPES.values }
