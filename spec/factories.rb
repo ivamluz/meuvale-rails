@@ -9,7 +9,7 @@ FactoryGirl.define do
     next_charge_amount 260
   end
 
-  factory :transaction do
+  factory :card_transaction do
     sequence(:date) { |n| n.days.ago }
     sequence(:description) { |n| "Restaurant #{n}" }
     sequence(:amount) { |n| n * 2.25 }

@@ -20,7 +20,7 @@ class VisaValeFetcherTest < ActiveSupport::TestCase
 
   test "exception is raised when invalid card is fetched" do
     exception = assert_raise(Exceptions::InvalidCardNumberException) do
-      @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_INVALID_NUMBER);
+      @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_INVALID_NUMBER)
     end
   end
 

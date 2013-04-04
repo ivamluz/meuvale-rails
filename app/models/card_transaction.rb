@@ -29,4 +29,6 @@ class CardTransaction < ActiveRecord::Base
             presence: true
 
   validates_date :date
+
+  default_scope order: 'card_transactions.created_at DESC'
 end
