@@ -2,7 +2,6 @@ require 'test_helper'
 
 class VisaValeParserTest < ActiveSupport::TestCase
   VALIDATION_PATTERN = {
-    :amount_regex        => /[0-9]{1,4}\.[0-9]{2}/,
     :card_number_regex   => /[0-9]{16}/,
     :date_regex          => /[0-9]{1,2}\/[0-9]{1,2}/,
     :optional_date_regex => /([0-9]{1,2}\/[0-9]{1,2})?/,
@@ -23,30 +22,30 @@ class VisaValeParserTest < ActiveSupport::TestCase
       :type => 'visa_vale',
       :number => '4058760402961025',
       :last_charged_at => '26/01',
-      :last_charge_amount => '220.00',
+      :last_charge_amount => 220.00,
       :next_charge => '',
-      :next_charge_amount => '0.00',
-      :available_balance => '178.99',
+      :next_charge_amount => 0.00,
+      :available_balance => 178.99,
       :transactions => [
         {
           :date => '31/01',
           :description => 'RESTAURANTE TASTY',
-          :amount => '16.77',
+          :amount => 16.77,
         },
         {
           :date => '30/01',
           :description => 'GRUPO GFB',
-          :amount => '11.57',
+          :amount => 11.57,
         },
         {
           :date => '06/09',
           :description => 'THIANE ADM RESTAURANTE',
-          :amount => '18.20',
+          :amount => 18.20,
         },
         {
           :date => '05/09',
           :description => 'VERDE SALADAS E SUCOS',
-          :amount => '10.90',
+          :amount => 10.90,
         }
       ]
     }
@@ -110,7 +109,7 @@ class VisaValeParserTest < ActiveSupport::TestCase
     card[:transactions].each do |transaction|
       assert_match(VALIDATION_PATTERN[:date_regex], transaction[:date], "Failed asserting transaction date format.")
       assert(!transaction[:description].empty?, "Failed asserting transaction description is not empty")
-      assert_match(VALIDATION_PATTERN[:amount_regex], transaction[:amount], "Failed asserting transaction amount format.")
+      assert((transaction[:amount].is_a? Float), "Failed asserting transaction amount format.")
     end
   end
 

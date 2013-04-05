@@ -122,7 +122,7 @@ module Parsers
 
     protected
     def to_float(value)
-      value.gsub /.*?([0-9]+),([0-9]+)$/, '\1.\2'
+      (value.gsub /.*?([0-9]+),([0-9]+)$/, '\1.\2').to_f
     end
 
     protected
