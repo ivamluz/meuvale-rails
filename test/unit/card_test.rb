@@ -115,6 +115,8 @@ class CardTest < ActiveSupport::TestCase
         '01/1/2013',
         '1/01/2013',
         '29/2/2012',
+        1.days.ago,
+        2.days.from_now,
       ]
 
       valid_date_formats.each do |valid_date|

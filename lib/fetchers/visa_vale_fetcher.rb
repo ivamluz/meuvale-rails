@@ -21,7 +21,7 @@ module Fetchers
 
         partial_card[:transactions].map! do |transaction|
           year = get_year_from_period(period)
-          transaction[:date].concat("/#{year}")
+          transaction[:date] = transaction[:date].concat("/#{year}").to_date
 
           transaction
         end        
@@ -38,7 +38,7 @@ module Fetchers
           first_period = periods.first.first
           year = get_year_from_period(first_period)
 
-          card[charge_date].concat("/#{year}")
+          card[charge_date] = card[charge_date].concat("/#{year}").to_date
         end
       end
 
@@ -60,7 +60,7 @@ module Fetchers
 
     protected
     def get_year_from_period(period)
-      period.gsub /^[0-9]{2}\/([0-9]{4})$/, '\1'
+      period.gsub /^([0-9]{2})\/([0-9]{4})$/, '\2'
     end
   end
 end

@@ -29,7 +29,7 @@ module Parsers
     def parse_available_periods
       self.check_for_exceptions
 
-      month_regex = /(janeiro|'fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)/
+      month_regex = /(janeiro|fevereiro|março|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)/
       month_mapping = {
         'janeiro'   => '01',
         'fevereiro' => '02',
