@@ -7,7 +7,7 @@ describe "Cards controller", :type => :controller do
 
     describe "valid card number" do
       it "should return a valid json response" do
-        visit "cards/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json"
+        visit "cards/#{Card::TYPES[:visa_vale]}/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json"
 
         response.content_type.should == "application/json"
 
@@ -45,7 +45,7 @@ describe "Cards controller", :type => :controller do
 
     describe "invalid card number" do
       it "should return a 404 page" do
-        visit "cards/#{Enum::CardNumber::VISA_VALE_INVALID_NUMBER}.json"
+        visit "cards/#{Card::TYPES[:visa_vale]}/#{Enum::CardNumber::VISA_VALE_INVALID_NUMBER}.json"
 
         response.response_code.should == 404
 
@@ -60,4 +60,13 @@ describe "Cards controller", :type => :controller do
       end
     end
   end
+
+  describe "invalid card type" do
+    it "should return a 404 page" do
+      visit "cards/invalid_card/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json"
+
+      response.response_code.should == 404
+    end
+  end
+
 end

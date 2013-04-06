@@ -3,28 +3,30 @@ class CardsController < ActionController::Base
     respond_to do |format|
 
       format.json do
-        card_number = params[:number]
-
-        fetcher = Fetchers::VisaValeFetcher.new(Connectors::Connector.new)
-
         begin
-          card = fetcher.fetch_card(card_number)
+          if !Card::TYPES.has_value? params[:type]
+            raise Exceptions::InvalidCardTypeException
+          end
+
+          fetcher = Fetchers::VisaValeFetcher.new(Connectors::Connector.new)
+          card = fetcher.fetch_card(params[:number])
         
           render :json => card.to_json
-        rescue Exceptions::InvalidCardNumberException => ex
+        rescue Exceptions::InvalidCardNumberException,
+               Exceptions::InvalidCardTypeException => ex
           logger.error ex
 
           render :json => {
             error: 404,
             message: 'Not found'
           }, :status => '404'
-        # rescue => ex
-        #   logger.error ex
+        rescue => ex
+          logger.error ex
 
-        #   render :json => {
-        #     error: 500,
-        #     message: 'Internal server error'
-        #   }, :status => '500'
+          render :json => {
+            error: 500,
+            message: 'Internal server error'
+          }, :status => '500'
         end
       end
     end

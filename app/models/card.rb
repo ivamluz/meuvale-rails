@@ -16,7 +16,7 @@
 
 class Card < ActiveRecord::Base
   TYPES = {
-    :visa_vale => 'visa_vale'
+    :visa_vale => 'visa-vale'
   }
 
   has_many :transactions, :class_name => "CardTransaction"
