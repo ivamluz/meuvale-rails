@@ -15,7 +15,7 @@ require 'test_helper'
 class CardTransactionTest < ActiveSupport::TestCase
   def setup
     @card = Card.create(
-      card_type: 'visa_vale',
+      card_type: Card::TYPES[:visa_vale],
       number: '1234567890123456'
     )
 

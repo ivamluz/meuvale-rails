@@ -15,7 +15,7 @@ describe "Cards controller", :type => :controller do
         json.should_not be_nil
 
         json.should include('type')
-        json['type'].should == 'visa_vale'
+        json['type'].should == Card::TYPES[:visa_vale]
 
         json.should include('number')
         json['number'].should == Enum::CardNumber::VISA_VALE_VALID_NUMBER

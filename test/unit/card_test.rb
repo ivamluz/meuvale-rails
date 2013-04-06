@@ -190,4 +190,14 @@ class CardTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "valid card types" do
+    ['visa_vale'].each do |type|
+      assert(Card::TYPES.has_value?(type), "#{type} is not a valid card type")
+    end
+  end
+
+  test "invalid card type" do
+    assert(!Card::TYPES.has_value?('invalid_card'), "invalid_card should not be a valid card type")
+  end
 end

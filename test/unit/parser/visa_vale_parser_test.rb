@@ -19,7 +19,7 @@ class VisaValeParserTest < ActiveSupport::TestCase
 
   def get_expected_valid_card
     card = {
-      :type => 'visa_vale',
+      :type => Card::TYPES[:visa_vale],
       :number => '4058760402961025',
       :last_charged_at => '26/01',
       :last_charge_amount => 220.00,
