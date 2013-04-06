@@ -48,6 +48,15 @@ describe "Cards controller", :type => :controller do
         visit "cards/#{Enum::CardNumber::VISA_VALE_INVALID_NUMBER}.json"
 
         response.response_code.should == 404
+
+        json = JSON.parse(response.body)
+        json.should_not be_nil
+
+        json.should include('error')
+        json['error'].should == 404
+
+        json.should include('message')
+        json['message'].should == 'Not found'
       end
     end
   end
