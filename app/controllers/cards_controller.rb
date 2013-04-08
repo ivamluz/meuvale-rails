@@ -4,19 +4,17 @@ class CardsController < ActionController::Base
 
       format.json do
         begin
-          if !Card::TYPES.has_value? params[:type]
-            raise Exceptions::InvalidCardTypeException
-          end
-
-          fetcher = Fetchers::VisaValeFetcher.new(Connectors::Connector.new)
+          fetcher = Fetchers::FetcherFactory.createByType(params[:type])
           card = fetcher.fetch_card(params[:number])
-        
+
           render :json => card.to_json
         rescue Exceptions::InvalidCardNumberException,
                Exceptions::InvalidCardTypeException => ex
           logger.error ex
 
-          raise ActiveRecord::RecordNotFound
+          # render :file => "#{Rails.root.to_s}/public/404", 
+          #        :formats => [:html], :layout => false, :status => 404
+          render :text => "404 Not found", :status => 404
         end
       end
     end
