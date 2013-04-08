@@ -50,6 +50,13 @@ describe "Cards controller", :type => :controller do
         response.response_code.should == 404
       end
     end
+
+    describe "invalid card number format" do
+      it "should return a 404 page" do
+        expect { visit "cards/#{Card::TYPES[:visa_vale]}/abc.json" }.to raise_error(ActionController::RoutingError)
+        expect { visit "cards/#{Card::TYPES[:visa_vale]}/123.json" }.to raise_error(ActionController::RoutingError)
+      end
+    end
   end
 
   describe "invalid card type" do
@@ -59,5 +66,4 @@ describe "Cards controller", :type => :controller do
       response.response_code.should == 404
     end
   end
-
 end
