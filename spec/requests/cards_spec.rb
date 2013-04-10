@@ -59,22 +59,22 @@ describe "Cards controller", :type => :controller do
       end
     end
 
-    # describe "card creation" do
-    #   it "should create a card" do
-    #     response.content_type.should == "application/json"
-    #     response.response_code.should == 200
+    describe "card creation" do
+      # it "should create a card" do
+      #   response.content_type.should == "application/json"
+      #   response.response_code.should == 200
 
-    #     json = JSON.parse(response.body)
-    #     json.should_not be_nil
-    #   end
+      #   json = JSON.parse(response.body)
+      #   json.should_not be_nil
+      # end
 
-    #   it "invalid card number should return error 400" do
-    #     post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_INVALID_NUMBER },
-    #                   { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+      it "invalid card number should return error 400" do
+        post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_INVALID_NUMBER },
+                      { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
 
-    #     response.response_code.should == 400
-    #   end
-    # end    
+        response.response_code.should == 400
+      end
+    end    
   end
 
   describe "invalid card type" do

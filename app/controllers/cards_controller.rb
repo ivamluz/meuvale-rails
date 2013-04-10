@@ -21,7 +21,13 @@ class CardsController < ActionController::Base
   def create()
     begin
       Card::validate_type(params[:type])
-    rescue Exceptions::InvalidCardTypeException => ex
+
+      fetcher = Fetchers::FetcherFactory.createByType(params[:type])
+      card = fetcher.fetch_card(params[:number])
+
+#      render :json => card.to_json
+    rescue Exceptions::InvalidCardNumberException,
+           Exceptions::InvalidCardTypeException => ex
       render :status => :bad_request, :text => "Invalid card type: #{params[:type]}"
     end
   end
