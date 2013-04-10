@@ -27,4 +27,17 @@ describe Card do
       @card.transactions.should == [newer_transaction, older_transaction]
     end
   end
+
+  describe "validation" do
+    it "should raise InvalidCardTypeException exception" do
+      expect { Card.validate_type 'invalid_card' }.to raise_error(Exceptions::InvalidCardTypeException)
+      expect { Card.validate_number_by_type 1234, 'invalid-card' }.to raise_error(Exceptions::InvalidCardTypeException)
+    end
+
+    describe "number by type" do
+      it "should raise InvalidCardNumberException exception for invalid #{Card::TYPES[:visa_vale]} number" do      
+        expect { Card.validate_number_by_type 1234, Card::TYPES[:visa_vale] }.to raise_error(Exceptions::InvalidCardNumberException)
+      end
+    end
+  end
 end

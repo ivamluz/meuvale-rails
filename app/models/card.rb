@@ -19,6 +19,10 @@ class Card < ActiveRecord::Base
     :visa_vale => 'visa-vale'
   }
 
+  NUMBER_VALIDATION_PATTERNS = {
+    TYPES[:visa_vale] => /^\d{16}$/
+  }
+
   has_many :transactions, :class_name => "CardTransaction"
 
   attr_accessible :card_type, :number, :available_balance,
@@ -35,4 +39,19 @@ class Card < ActiveRecord::Base
             allow_blank: true
 
   validates_date :last_charged_at, :next_charge, allow_nil: true
+
+
+  def self.validate_type(type)
+    if !TYPES.has_value? type
+      raise Exceptions::InvalidCardTypeException
+    end
+  end
+
+  def self.validate_number_by_type(number, type)
+    validate_type(type)
+
+    if !NUMBER_VALIDATION_PATTERNS[type].match number.to_s
+      raise Exceptions::InvalidCardNumberException
+    end
+  end
 end

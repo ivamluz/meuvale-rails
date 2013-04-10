@@ -58,4 +58,6 @@ MeuValeWs::Application.routes.draw do
 
   match "/cards/:type/:number" => "cards#show", :via => :get,
         :constraints => { :number => /\d{16}/ }
+
+  match "/cards" => "cards#create", :via => :post
 end

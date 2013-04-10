@@ -10,6 +10,7 @@ describe "Cards controller", :type => :controller do
         visit "cards/#{Card::TYPES[:visa_vale]}/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json"
 
         response.content_type.should == "application/json"
+        response.response_code.should == 200
 
         json = JSON.parse(response.body)
         json.should_not be_nil
@@ -57,13 +58,37 @@ describe "Cards controller", :type => :controller do
         expect { visit "cards/#{Card::TYPES[:visa_vale]}/123.json" }.to raise_error(ActionController::RoutingError)
       end
     end
+
+    # describe "card creation" do
+    #   it "should create a card" do
+    #     response.content_type.should == "application/json"
+    #     response.response_code.should == 200
+
+    #     json = JSON.parse(response.body)
+    #     json.should_not be_nil
+    #   end
+
+    #   it "invalid card number should return error 400" do
+    #     post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_INVALID_NUMBER },
+    #                   { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+
+    #     response.response_code.should == 400
+    #   end
+    # end    
   end
 
   describe "invalid card type" do
-    it "should return a 404 page" do
+    it "get should return a 404 page" do
       visit "cards/invalid_card/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json"
 
       response.response_code.should == 404
+    end
+
+    it "creation should return error 400" do
+      post 'cards', { :type => 'invalid-card', :number => 1234 },
+                    { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+
+      response.response_code.should == 400
     end
   end
 end

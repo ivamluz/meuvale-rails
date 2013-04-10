@@ -17,4 +17,12 @@ class CardsController < ActionController::Base
       end
     end
   end
+
+  def create()
+    begin
+      Card::validate_type(params[:type])
+    rescue Exceptions::InvalidCardTypeException => ex
+      render :status => :bad_request, :text => "Invalid card type: #{params[:type]}"
+    end
+  end
 end
