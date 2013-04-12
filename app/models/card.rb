@@ -47,7 +47,7 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def self.validate_number_by_type(number, type)
+  def self.validate_number_format_by_type(number, type)
     validate_type(type)
 
     if !NUMBER_VALIDATION_PATTERNS[type].match number.to_s

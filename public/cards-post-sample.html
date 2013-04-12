@@ -1,0 +1,27 @@
+<html>
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    // valid card type and number
+    [
+      { type: 'visa-vale', number: '4058760402961025' },
+      { type: 'foo', number: '4058760402961025' },
+      { type: 'visa-vale', number: 'bar' },
+    ].forEach(function(element) {
+      console.log(element);
+      $.post(
+        "http://0.0.0.0:3000/cards", 
+        {
+          type: element.type,
+          number: element.number
+        }
+      )
+      .done(function(result) {
+        console.log(result);
+      });
+    })
+  </script>  
+</head>
+<body>
+</body>
+</html>
