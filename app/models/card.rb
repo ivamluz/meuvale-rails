@@ -54,4 +54,19 @@ class Card < ActiveRecord::Base
       raise Exceptions::InvalidCardNumberException
     end
   end
+
+  def self.create_with_transactions(card_info)
+    transactions = card_info[:transactions]
+    card_info.delete(:transactions)
+
+    card = nil
+    ActiveRecord::Base.transaction do
+      card = Card.create(card_info)
+      transactions.each do |transaction|
+        card.transactions.create(transaction)
+      end
+    end
+
+    card
+  end
 end

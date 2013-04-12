@@ -11,8 +11,8 @@ describe "Cards controller", :type => :controller do
         json = JSON.parse(response.body)
         json.should_not be_nil
 
-        json.should include('type')
-        json['type'].class.should == String
+        json.should include('card_type')
+        json['card_type'].class.should == String
 
         json.should include('number')
 
@@ -51,7 +51,7 @@ describe "Cards controller", :type => :controller do
       end
 
       it "has right type" do
-        json['type'].should == Card::TYPES[:visa_vale]
+        json['card_type'].should == Card::TYPES[:visa_vale]
       end
     end
   end
@@ -101,6 +101,15 @@ describe "Cards controller", :type => :controller do
                         { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" } 
 
           response.response_code.should == 201
+
+          Card.count.should == 1
+          CardTransaction.count.should > 0
+
+          card = Card.first
+
+          card.card_type.should == Card::TYPES[:visa_vale]
+          card.number.should == Enum::CardNumber::VISA_VALE_VALID_NUMBER
+          card.transactions.count.should > 0
         end
       end
 

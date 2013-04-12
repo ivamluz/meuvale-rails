@@ -19,7 +19,7 @@ module Parsers
 
       card = self.parse_basic_card_info
       unless card.empty?
-        card[:type] = 'visa-vale'
+        card[:card_type] = 'visa-vale'
         card[:transactions] = self.parse_transactions
       end
 

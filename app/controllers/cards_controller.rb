@@ -24,6 +24,10 @@ class CardsController < ActionController::Base
       fetcher = Fetchers::FetcherFactory.createByType(params[:type])
       card = fetcher.fetch_card(params[:number])
 
+      if not Card.find_by_number(params[:number])
+        Card.create_with_transactions(card)
+      end
+
       render :json => card, :status => :created
     rescue Exceptions::InvalidCardTypeException => ex
       logger.error ex
