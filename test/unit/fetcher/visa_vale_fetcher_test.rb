@@ -7,6 +7,7 @@ class VisaValeFetcherTest < ActiveSupport::TestCase
     :card_number_regex   => /^[0-9]{16}$/,
     :date_regex          => /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/,
     :optional_date_regex => /^([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4})?$/,
+    :amount_regex        => /[0-9]+\.[0-9]{2}/
   }
 
   def setup
@@ -28,15 +29,15 @@ class VisaValeFetcherTest < ActiveSupport::TestCase
 
     assert_match(VALIDATION_PATTERN[:card_number_regex], card[:number]);
     assert((card[:last_charged_at].is_a? Date), "last_charged_at should be a valid date.");
-    assert(card[:last_charge_amount].is_a? Float);
+    assert_match(VALIDATION_PATTERN[:amount_regex], card[:last_charge_amount]);
     assert_match(VALIDATION_PATTERN[:optional_date_regex], card[:next_charge]);
-    assert(card[:next_charge_amount].is_a? Float);
-    assert(card[:available_balance].is_a? Float);
+    assert_match(VALIDATION_PATTERN[:amount_regex], card[:next_charge_amount]);
+    assert_match(VALIDATION_PATTERN[:amount_regex], card[:available_balance]);
 
     card[:transactions].each do |transaction|
       assert(transaction[:date].is_a? Date);
       assert(!transaction[:description].empty?);
-      assert(transaction[:amount].is_a? Float);
+      assert_match(VALIDATION_PATTERN[:amount_regex], transaction[:amount]);
     end
   end
 end

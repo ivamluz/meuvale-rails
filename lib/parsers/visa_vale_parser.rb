@@ -26,6 +26,15 @@ module Parsers
       card
     end
 
+    def get_transactions_hash
+      node = @document.at_xpath(".//*[@id='frmSaldoExtratoPFS']/table[3]")
+
+      hash = nil
+      unless node.nil?
+        hash = Digest::SHA1.hexdigest(node.inner_html)
+      end
+    end
+
     def parse_available_periods
       self.check_for_exceptions
 
@@ -100,7 +109,7 @@ module Parsers
         unless node.nil?
           card[field_symbol] = node.content
           if amount_fields.include? field_symbol
-            card[field_symbol] = self.to_float(node.content)
+            card[field_symbol] = self.parse_amount(node.content)
           end
         end
       end
@@ -121,8 +130,8 @@ module Parsers
     end
 
     protected
-    def to_float(value)
-      (value.gsub /.*?([0-9]+),([0-9]+)$/, '\1.\2').to_f
+    def parse_amount(value)
+      value.gsub /.*?([0-9]+),([0-9]+)$/, '\1.\2'
     end
 
     protected
@@ -135,7 +144,7 @@ module Parsers
           transactions.push({
             :date        => entry.at_xpath("td[1]").content,
             :description => entry.at_xpath("td[2]").content,
-            :amount      => self.to_float(entry.at_xpath("td[3]").content),
+            :amount      => self.parse_amount(entry.at_xpath("td[3]").content),
           })
         end
       end

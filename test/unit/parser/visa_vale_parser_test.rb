@@ -5,6 +5,7 @@ class VisaValeParserTest < ActiveSupport::TestCase
     :card_number_regex   => /[0-9]{16}/,
     :date_regex          => /[0-9]{1,2}\/[0-9]{1,2}/,
     :optional_date_regex => /([0-9]{1,2}\/[0-9]{1,2})?/,
+    :amount_regex => /[0-9]+\.[0-9]{2}/
   }
 
   def setup
@@ -22,30 +23,30 @@ class VisaValeParserTest < ActiveSupport::TestCase
       :card_type => Card::TYPES[:visa_vale],
       :number => '4058760402961025',
       :last_charged_at => '26/01',
-      :last_charge_amount => 220.00,
+      :last_charge_amount => '220.00',
       :next_charge => '',
-      :next_charge_amount => 0.00,
-      :available_balance => 178.99,
+      :next_charge_amount => '0.00',
+      :available_balance => '178.99',
       :transactions => [
         {
           :date => '31/01',
           :description => 'RESTAURANTE TASTY',
-          :amount => 16.77,
+          :amount => '16.77',
         },
         {
           :date => '30/01',
           :description => 'GRUPO GFB',
-          :amount => 11.57,
+          :amount => '11.57',
         },
         {
           :date => '06/09',
           :description => 'THIANE ADM RESTAURANTE',
-          :amount => 18.20,
+          :amount => '18.20',
         },
         {
           :date => '05/09',
           :description => 'VERDE SALADAS E SUCOS',
-          :amount => 10.90,
+          :amount => '10.90',
         }
       ]
     }
@@ -109,7 +110,7 @@ class VisaValeParserTest < ActiveSupport::TestCase
     card[:transactions].each do |transaction|
       assert_match(VALIDATION_PATTERN[:date_regex], transaction[:date], "Failed asserting transaction date format.")
       assert(!transaction[:description].empty?, "Failed asserting transaction description is not empty")
-      assert((transaction[:amount].is_a? Float), "Failed asserting transaction amount format.")
+      assert_match(VALIDATION_PATTERN[:amount_regex], transaction[:amount], "Failed asserting transaction amount format.")
     end
   end
 
@@ -148,5 +149,11 @@ class VisaValeParserTest < ActiveSupport::TestCase
       html = Helpers::Html::get_test_html(Helpers::Html::TEST_HTML[:visa_vale_invalid_response])
       @parser.prepare(html).parse_available_periods
     end
+  end
+
+  test "transactions hash" do
+    html = Helpers::Html::get_test_html(Helpers::Html::TEST_HTML[:visa_vale_valid_card_with_transactions])
+    
+    assert_equal("476533a4d1c8136d5b299c97ebe56ca28984a9e6", @parser.prepare(html).get_transactions_hash)
   end
 end

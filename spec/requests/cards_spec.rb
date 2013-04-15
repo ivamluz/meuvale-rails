@@ -3,6 +3,10 @@ require 'spec_helper'
 describe "Cards controller", :type => :controller do
   render_views
 
+  let(:date_regex) { /^201[0-9]-(0[1-9]|1[12])-(0[1-9]|[12][0-9]|3[01])$/ }
+  let(:optional_date_regex) { /^(201[0-9]-(0[1-9]|1[12])-(0[1-9]|[12][0-9]|3[01]))?$/ }
+  let(:amount_regex) { /[0-9]+\.[0-9]{1,2}/ }
+
   shared_examples 'a valid response' do
     describe 'json' do
       it 'should be valid' do
@@ -17,25 +21,29 @@ describe "Cards controller", :type => :controller do
         json.should include('number')
 
         json.should include('available_balance')
-        json['available_balance'].class.should == Float
+        json['available_balance'].should match amount_regex
 
         json.should include('last_charged_at')        
         json['last_charged_at'].to_date.class.should == Date
-        json['last_charged_at'].should match /^201[0-9]-(0[1-9]|1[12])-(0[1-9]|[12][0-9]|3[01])$/
+        json['last_charged_at'].should match date_regex
 
         json.should include('last_charge_amount')
-        json['last_charge_amount'].class.should == Float
-        json['last_charge_amount'].should > 0
+        json['last_charge_amount'].should match amount_regex
 
         json.should include('next_charge')
-        json['next_charge'].should match /^(201[0-9]-(0[1-9]|1[12])-(0[1-9]|[12][0-9]|3[01]))?$/
+        json['next_charge'].to_s.should match optional_date_regex
 
         json.should include('next_charge_amount')
-        json['next_charge_amount'].class.should == Float
-        json['next_charge_amount'].should >= 0
+        json['next_charge_amount'].should match amount_regex
 
         json.should include('transactions')
         json['transactions'].class.should == Array
+
+        json['transactions'].each do |transaction|
+          transaction['description'].should_not be_nil
+          transaction['date'].to_s.should match date_regex
+          transaction['amount'].should match amount_regex
+        end
       end
     end
   end
@@ -113,16 +121,76 @@ describe "Cards controller", :type => :controller do
         end
       end
 
-      it "when card number is invalid" do
-        post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_INVALID_NUMBER },
-                      { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+      describe "when card exists" do
+        before do
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_VALID_NUMBER },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+        end
 
-        response.response_code.should == 400
+        it "should not create a new card" do
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_VALID_NUMBER },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
 
-        post 'cards', { :type => Card::TYPES[:visa_vale], :number => 'foo' },
-                      { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+          Card.count.should == 1
+        end
 
-        response.response_code.should == 400
+        it "should return the right http code" do
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_VALID_NUMBER },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+          response.response_code.should == 200          
+        end
+
+        it "should return a valid json object" do
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_VALID_NUMBER },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+
+          response.content_type.should == "application/json"        
+
+          json = JSON.parse(response.body)
+          json.should_not be_nil
+
+          json.should include('card_type')
+          json['card_type'].class.should == String
+
+          json.should include('number')
+
+          json.should include('available_balance')
+          json['available_balance'].should match amount_regex
+
+          json.should include('last_charged_at')        
+          json['last_charged_at'].to_date.class.should == Date
+          json['last_charged_at'].should match date_regex
+
+          json.should include('last_charge_amount')
+          json['last_charge_amount'].should match amount_regex
+
+          json.should include('next_charge')
+          json['next_charge'].to_s.should match optional_date_regex
+
+          json.should include('next_charge_amount')
+          json['next_charge_amount'].should match amount_regex
+
+          json.should include('transactions')
+          json['transactions'].class.should == Array
+
+          json['transactions'].each do |transaction|
+            transaction['description'].should_not be_nil
+            transaction['date'].to_s.should match date_regex
+            transaction['amount'].should match amount_regex
+          end
+        end
+      end
+
+      describe "when card number is invalid" do
+        it "request should be invalid" do
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => Enum::CardNumber::VISA_VALE_INVALID_NUMBER },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+          response.response_code.should == 400
+
+          post 'cards', { :type => Card::TYPES[:visa_vale], :number => 'foo' },
+                        { 'HTTP_CONTENT_TYPE' => "application/json", 'HTTP_ACCEPT' => "application/json" }
+          response.response_code.should == 400
+        end
       end
     end    
   end

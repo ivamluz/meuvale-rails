@@ -21,14 +21,21 @@ class CardsController < ActionController::Base
     begin
       Card::validate_number_format_by_type(params[:number], params[:type])
 
-      fetcher = Fetchers::FetcherFactory.createByType(params[:type])
-      card = fetcher.fetch_card(params[:number])
+      status = :ok
 
-      if not Card.find_by_number(params[:number])
-        Card.create_with_transactions(card)
+      card = Card.find_by_number(params[:number])      
+      if not card
+        fetcher = Fetchers::FetcherFactory.createByType(params[:type])
+        card = fetcher.fetch_card(params[:number])
+        card = Card.create_with_transactions(card)
+
+        status = :created
       end
-
-      render :json => card, :status => :created
+      
+      render :json => card.to_json(
+                :include => { :transactions => { :except => [:card_id, :created_at, :updated_at] } }
+              ),
+             :status => status
     rescue Exceptions::InvalidCardTypeException => ex
       logger.error ex
 
