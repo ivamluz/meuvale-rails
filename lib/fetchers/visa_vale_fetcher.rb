@@ -11,34 +11,38 @@ module Fetchers
       @parser = Parsers::VisaValeParser.new
     end
 
-    def fetch_card(card_number)
-      card = {};
+    def fetch_card(card_number, since = nil)
+      card = {}
 
       periods = self.get_urls_to_fetch_by_period(card_number)
-      periods.each do |period, url|
-        response = @connector.get(url)
-        partial_card = @parser.prepare(response).parse
+      periods.each do |period, url|        
+        unless is_period_skippable(period, since)
+          response = @connector.get(url)
+          partial_card = @parser.prepare(response).parse
 
-        partial_card[:transactions].map! do |transaction|
-          year = get_year_from_period(period)
-          transaction[:date] = transaction[:date].concat("/#{year}").to_date
+          partial_card[:transactions].map! do |transaction|
+            year = get_year_from_period(period)
+            transaction[:date] = transaction[:date].concat("/#{year}").to_date
 
-          transaction
-        end        
+            transaction
+          end        
 
-        if card.empty?
-          card = partial_card
-        else
-          card[:transactions].push(*partial_card[:transactions])
+          if card.empty?
+            card = partial_card
+          else
+            card[:transactions].push(*partial_card[:transactions])
+          end
         end
       end
 
-      [:last_charged_at, :next_charge].each do |charge_date|
-        unless card[charge_date].empty?
-          first_period = periods.first.first
-          year = get_year_from_period(first_period)
+      unless card.empty?
+        [:last_charged_at, :next_charge].each do |charge_date|
+          unless card[charge_date].empty?
+            first_period = periods.first.first
+            year = get_year_from_period(first_period)
 
-          card[charge_date] = card[charge_date].concat("/#{year}").to_date
+            card[charge_date] = card[charge_date].concat("/#{year}").to_date
+          end
         end
       end
 
@@ -48,7 +52,7 @@ module Fetchers
     protected
     def get_urls_to_fetch_by_period(card_number)
       initial_url = BASE_URL.sub '__CARD_NUMBER__', card_number
-      response = @connector.get(initial_url);
+      response = @connector.get(initial_url)
 
       urls = {}
       @parser.prepare(response).parse_available_periods.each_with_index do |period, period_id|
@@ -61,6 +65,19 @@ module Fetchers
     protected
     def get_year_from_period(period)
       period.gsub /^([0-9]{2})\/([0-9]{4})$/, '\2'
+    end
+
+    protected
+    def is_period_skippable(period, since)
+      skip = false
+      unless since.nil?
+        month, year = period.match(/([0-9]{2})\/([0-9]{4})/).captures
+        period_for_comparison = "#{year}#{month}"
+
+        since_for_comparison = since.strftime("%Y%m")
+
+        skip = period_for_comparison < since_for_comparison
+      end
     end
   end
 end

@@ -22,11 +22,11 @@ class VisaValeParserTest < ActiveSupport::TestCase
     card = {
       :card_type => Card::TYPES[:visa_vale],
       :number => '4058760402961025',
-      :last_charged_at => '26/01',
-      :last_charge_amount => '220.00',
+      :last_charged_at => '26/03',
+      :last_charge_amount => '264.00',
       :next_charge => '',
       :next_charge_amount => '0.00',
-      :available_balance => '178.99',
+      :available_balance => '47.37',
       :transactions => [
         {
           :date => '31/01',
@@ -56,10 +56,10 @@ class VisaValeParserTest < ActiveSupport::TestCase
 
   def get_expected_available_periods
     [
+      '04/2013',
+      '03/2013',
+      '02/2013',
       '01/2013',
-      '12/2012',
-      '11/2012',
-      '10/2012',
     ]
   end
 
@@ -154,6 +154,6 @@ class VisaValeParserTest < ActiveSupport::TestCase
   test "transactions hash" do
     html = Helpers::Html::get_test_html(Helpers::Html::TEST_HTML[:visa_vale_valid_card_with_transactions])
     
-    assert_equal("476533a4d1c8136d5b299c97ebe56ca28984a9e6", @parser.prepare(html).get_transactions_hash)
+    assert_equal("7cdcd6738dcc783504ae222894e24b0db5f4b32f", @parser.prepare(html).get_transactions_hash)
   end
 end
