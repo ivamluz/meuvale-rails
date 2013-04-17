@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: cards
+#
+#  id                 :integer          not null, primary key
+#  card_type          :string(20)       not null
+#  number             :string(30)       not null
+#  last_charged_at    :date
+#  next_charge        :date
+#  available_balance  :decimal(6, 2)
+#  last_charge_amount :decimal(6, 2)
+#  next_charge_amount :decimal(6, 2)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  transactions_hash  :string(40)       default(""), not null
+#
+
 require 'spec_helper'
 
 describe Card do  

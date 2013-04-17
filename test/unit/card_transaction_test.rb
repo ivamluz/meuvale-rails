@@ -3,6 +3,7 @@
 # Table name: card_transactions
 #
 #  id          :integer          not null, primary key
+#  card_id     :integer
 #  date        :date             not null
 #  description :string(30)       not null
 #  amount      :decimal(6, 2)    not null

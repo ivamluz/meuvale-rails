@@ -12,6 +12,7 @@
 #  next_charge_amount :decimal(6, 2)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  transactions_hash  :string(40)       default(""), not null
 #
 
 require 'test_helper'
@@ -26,6 +27,7 @@ class CardTest < ActiveSupport::TestCase
       last_charge_amount: 220.00,
       next_charge: Date.parse('26/02/2013'),
       next_charge_amount: 260.00,
+      transactions_hash: "7cdcd6738dcc783504ae222894e24b0db5f4b32f"
     )
 
     @original_card = Marshal::load(Marshal.dump(@card))
@@ -40,6 +42,7 @@ class CardTest < ActiveSupport::TestCase
     assert(@card.respond_to? :next_charge)
     assert(@card.respond_to? :next_charge_amount)
     assert(@card.respond_to? :transactions)
+    assert(@card.respond_to? :transactions_hash)
   end
 
   test "non nullable fields dont accept empty values" do
@@ -81,6 +84,40 @@ class CardTest < ActiveSupport::TestCase
   test "invalid card type validation" do
     @card.card_type = 'bancred'
     assert(!@card.valid?)
+  end
+
+  test "invalid transactions hash validation" do
+    invalid_hashes = [
+      "foo",
+      "123",
+      "7cdcd6738dcc783504ae222894e24b0db5f4b32ff", #41 characters long
+      "7cdcd6738dcc783504ae222894e24b0db5f4b32=",
+      ".7cdcd6738dcc783504ae222894e24b0db5f4b32f",
+      "a" * 39,
+      "a" * 41,
+      "1" * 39,
+      "1" * 41,
+    ]
+
+    invalid_hashes.each do |invalid_hash|
+      @card.transactions_hash = invalid_hash
+      assert(!@card.valid?, "#{invalid_hash} should not be a valid hash")
+    end
+  end
+
+  test "valid transactions hash validation" do
+    valid_hashes = [
+      "7cdcd6738dcc783504ae222894e24b0db5f4b32f",
+      "1" * 40,
+      "a" * 40,
+      ("1" * 20) + ("a" * 20),
+      ("a" * 20) + ("1" * 20),
+    ]
+
+    valid_hashes.each do |valid_hash|
+      @card.transactions_hash = valid_hash
+      assert(@card.valid?, "#{valid_hash} should be a valid hash")
+    end
   end
 
   test "invalid date formats validation" do

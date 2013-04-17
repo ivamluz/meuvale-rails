@@ -12,6 +12,7 @@
 #  next_charge_amount :decimal(6, 2)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  transactions_hash  :string(40)       default(""), not null
 #
 
 class Card < ActiveRecord::Base
@@ -27,7 +28,8 @@ class Card < ActiveRecord::Base
 
   attr_accessible :card_type, :number, :available_balance,
                   :last_charged_at, :last_charge_amount,
-                  :next_charge, :next_charge_amount
+                  :next_charge, :next_charge_amount,
+                  :transactions_hash
 
   validates :card_type, 
             presence: true, length: { maximum: 20 }, inclusion: { in: TYPES.values }
@@ -36,10 +38,11 @@ class Card < ActiveRecord::Base
   validates :available_balance, :last_charge_amount, :next_charge_amount,
             numericality: { greater_than_or_equal_to: 0 },
             format: { with: /^\d+(\.\d{1,2})?$/ },
-            allow_blank: true
+            allow_blank: true            
 
   validates_date :last_charged_at, :next_charge, allow_nil: true
 
+  validates :transactions_hash, format: { with: /^[0-9a-f]{40}$/ }
 
   def self.validate_type(type)
     if !TYPES.has_value? type

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130308010330) do
+ActiveRecord::Schema.define(:version => 20130417213421) do
 
   create_table "card_transactions", :force => true do |t|
     t.integer  "card_id"
@@ -27,15 +27,16 @@ ActiveRecord::Schema.define(:version => 20130308010330) do
   add_index "card_transactions", ["description"], :name => "index_card_transactions_on_description"
 
   create_table "cards", :force => true do |t|
-    t.string   "card_type",          :limit => 20,                               :null => false
-    t.string   "number",             :limit => 30,                               :null => false
+    t.string   "card_type",          :limit => 20,                                               :null => false
+    t.string   "number",             :limit => 30,                                               :null => false
     t.date     "last_charged_at"
     t.date     "next_charge"
     t.decimal  "available_balance",                :precision => 6, :scale => 2
     t.decimal  "last_charge_amount",               :precision => 6, :scale => 2
     t.decimal  "next_charge_amount",               :precision => 6, :scale => 2
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.datetime "created_at",                                                                     :null => false
+    t.datetime "updated_at",                                                                     :null => false
+    t.string   "transactions_hash",  :limit => 40,                               :default => "", :null => false
   end
 
   add_index "cards", ["card_type", "number"], :name => "index_cards_on_card_type_and_number", :unique => true
