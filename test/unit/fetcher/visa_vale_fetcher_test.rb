@@ -45,13 +45,11 @@ class VisaValeFetcherTest < ActiveSupport::TestCase
   end
 
   test "fetch card transactions since date" do
-    since = Date.parse('31-03-2013')
+    since = Date.parse('01-03-2013')
     card = @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_VALID_NUMBER, since)
 
     card[:transactions].each do |transaction|
-      is_valid_period = (transaction[:date].year == 2013 && transaction[:date].month == 03) ||
-                        (transaction[:date].year == 2013 && transaction[:date].month == 04)
-      assert(is_valid_period, "#{transaction[:date]} is not in a valid period.")
+      assert(transaction[:date] >= since, "#{transaction[:date]} is not in a valid period.")
     end
   end
 end

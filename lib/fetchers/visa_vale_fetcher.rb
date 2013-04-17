@@ -72,11 +72,9 @@ module Fetchers
       skip = false
       unless since.nil?
         month, year = period.match(/([0-9]{2})\/([0-9]{4})/).captures
-        period_for_comparison = "#{year}#{month}"
+        period = DateTime.new(year.to_i, month.to_i, 1)
 
-        since_for_comparison = since.strftime("%Y%m")
-
-        skip = period_for_comparison < since_for_comparison
+        skip = period < since
       end
     end
   end
