@@ -36,6 +36,7 @@ module Fetchers
 
           if card.empty?
             card = partial_card
+            card[:transactions_hash] = get_transactions_hash(card_number)
           else
             card[:transactions].push(*partial_card[:transactions])
           end
@@ -96,6 +97,11 @@ module Fetchers
 
         skip = period < options[:since]
       end
+    end
+
+    protected
+    def get_transactions_hash(card_number)
+      @parser.prepare(get_initial_content card_number).get_transactions_hash
     end
 
     protected

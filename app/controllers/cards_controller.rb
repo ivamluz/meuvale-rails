@@ -23,8 +23,7 @@ class CardsController < ActionController::Base
 
       status = :ok
 
-      # TODO: find_by_attributes type and number
-      card = Card.find_by_number(params[:number])      
+      card = Card.find(:first, :conditions => { number: params[:number], card_type: params[:type] })
       if not card
         fetcher = Fetchers::FetcherFactory.createByType(params[:type])
         card = fetcher.fetch_card(params[:number])
