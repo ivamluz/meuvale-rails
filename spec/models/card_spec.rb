@@ -29,6 +29,7 @@ describe Card do
         last_charge_amount: 220.00,
         next_charge: Date.parse('26/02/2013'),
         next_charge_amount: 260.00,
+        transactions_hash: "1a" * 20,
       )
     end
 
@@ -55,6 +56,7 @@ describe Card do
         :next_charge => '',
         :next_charge_amount => 0.00,
         :available_balance => 178.99,
+        :transactions_hash => "1a" * 20,
         :transactions => [
           {
             :date => '2013-01-31',
