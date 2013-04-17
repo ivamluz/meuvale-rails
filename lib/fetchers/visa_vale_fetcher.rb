@@ -23,7 +23,7 @@ module Fetchers
 
       periods = self.get_urls_to_fetch_by_period(card_number)
       periods.each do |period, url|        
-        unless is_period_skippable({ period: period, since: limiting_options[:since] })
+        unless period_skippable? period: period, since: limiting_options[:since]
           response = @connector.get(url)
           partial_card = @parser.prepare(response).parse
 
@@ -84,7 +84,7 @@ module Fetchers
     # - period: string with format MM/YYYY
     # - since: Date object
     protected
-    def is_period_skippable(options)
+    def period_skippable?(options)
       if options[:period].nil?
         raise ArgumentError.new(":period argument is required")
       end
