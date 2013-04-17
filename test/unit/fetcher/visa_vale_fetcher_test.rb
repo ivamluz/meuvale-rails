@@ -46,10 +46,19 @@ class VisaValeFetcherTest < ActiveSupport::TestCase
 
   test "fetch card transactions since date" do
     since = Date.parse('01-03-2013')
-    card = @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_VALID_NUMBER, since)
+    card = @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_VALID_NUMBER, { since: since } )
 
     card[:transactions].each do |transaction|
       assert(transaction[:date] >= since, "#{transaction[:date]} is not in a valid period.")
     end
+  end
+
+  test "no information is fetched when transactions hash has not changed" do
+    card = @fetcher.fetch_card(Enum::CardNumber::VISA_VALE_VALID_NUMBER, { transactions_hash: "7cdcd6738dcc783504ae222894e24b0db5f4b32f" } )
+    assert(card.empty?, "card should be empty")
+  end
+
+  test "check transactions are same" do
+    assert(@fetcher.send(:transactions_are_same?, Enum::CardNumber::VISA_VALE_VALID_NUMBER, "7cdcd6738dcc783504ae222894e24b0db5f4b32f"), "transactions hash should be equal")
   end
 end
