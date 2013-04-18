@@ -59,17 +59,36 @@ class Card < ActiveRecord::Base
   end
 
   def self.create_with_transactions(card_info)
-    transactions = card_info[:transactions]
-    card_info.delete(:transactions)
-
     card = nil
     ActiveRecord::Base.transaction do
-      card = Card.create(card_info)
-      transactions.each do |transaction|
+      local_card_info = Marshal::load(Marshal.dump(card_info))
+      local_card_info.delete(:transactions)
+      card = Card.create(local_card_info)
+
+      card_info[:transactions].each do |transaction|
         card.transactions.create(transaction)
       end
     end
 
     card
+  end
+
+  def update_with_transactions!(card_info)
+    unless self.transactions_hash == card_info[:transactions_hash]
+      ActiveRecord::Base.transaction do
+        local_card_info = Marshal::load(Marshal.dump(card_info))
+        local_card_info.delete(:transactions)
+        self.update_attributes(local_card_info)
+
+        card_info[:transactions].each do |transaction|
+          # to avoid duplicated transactions, existing transactions with
+          # the same date of the transaction being processed are deleted
+          CardTransaction.delete_all(card_id: self.id, date: transaction[:date])
+          self.transactions.create(transaction)
+        end
+      end
+    end
+
+    self
   end
 end

@@ -17,7 +17,8 @@ class CardTransactionTest < ActiveSupport::TestCase
   def setup
     @card = Card.create(
       card_type: Card::TYPES[:visa_vale],
-      number: '1234567890123456'
+      number: '1234567890123456',
+      transactions_hash: "1a" * 20,
     )
 
     @transaction = @card.transactions.build(
@@ -25,11 +26,6 @@ class CardTransactionTest < ActiveSupport::TestCase
       description: 'Thiane',
       amount: 23.25
     )
-
-    # @transaction = CardTransaction.new
-    # @transaction.date = Date.parse('26/01/2013')
-    # @transaction.description = 'Thiane'
-    # @transaction.amount = 23.25
 
     @original_transaction = Marshal::load(Marshal.dump(@transaction))
   end
