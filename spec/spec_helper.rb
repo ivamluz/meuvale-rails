@@ -25,3 +25,15 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 end
+
+  def without_timestamping_of(*class_list)
+    if block_given?
+      class_list.delete_if { |a_class| !a_class.record_timestamps }
+      class_list.each { |a_class| a_class.record_timestamps = false }
+      begin
+        yield
+      ensure
+        class_list.each { |a_class| a_class.record_timestamps = true }
+      end
+    end
+  end

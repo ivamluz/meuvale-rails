@@ -194,4 +194,23 @@ describe Card do
       end
     end
   end
+
+  describe "fetch cards updated before date" do
+    before do
+      FactoryGirl.create(:card)
+      FactoryGirl.create(:card)
+      FactoryGirl.create(:card)
+    end
+
+    it "should return only cards older than date specified" do
+      Card.updated_before(0.hours.ago).count.should be 3
+      Card.updated_before(1.hours.ago).count.should be 2
+      Card.updated_before(23.hours.ago).count.should be 2
+      Card.updated_before(24.hours.ago).count.should be 2
+      Card.updated_before(25.hours.ago).count.should be 1
+      Card.updated_before(47.hours.ago).count.should be 1
+      Card.updated_before(48.hours.ago).count.should be 1
+      Card.updated_before(49.hours.ago).count.should be 0
+    end
+  end
 end

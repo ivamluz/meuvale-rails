@@ -74,7 +74,8 @@ class Card < ActiveRecord::Base
   end
 
   def update_with_transactions!(card_info)
-    unless self.transactions_hash == card_info[:transactions_hash]
+    unless self.transactions_hash == card_info[:transactions_hash] or
+           card_info[:transactions].nil?
       ActiveRecord::Base.transaction do
         local_card_info = Marshal::load(Marshal.dump(card_info))
         local_card_info.delete(:transactions)
@@ -90,5 +91,9 @@ class Card < ActiveRecord::Base
     end
 
     self
+  end
+
+  def self.updated_before(date)
+    Card.where("updated_at < :date", { :date => date } )
   end
 end

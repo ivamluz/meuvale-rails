@@ -93,9 +93,10 @@ module Fetchers
       skip = false
       unless options[:period].nil? or options[:since].nil?
         month, year = options[:period].match(/([0-9]{2})\/([0-9]{4})/).captures
-        period = DateTime.new(year.to_i, month.to_i, 1)
+        period = year + month
+        since_period = options[:since].year.to_s + options[:since].month.to_s.rjust(2, '0')
 
-        skip = period < options[:since]
+        skip = period < since_period
       end
     end
 
