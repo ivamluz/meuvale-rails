@@ -73,7 +73,7 @@ module Fetchers
     def get_initial_content(card_number)
       initial_url = BASE_URL.sub '__CARD_NUMBER__', card_number
 
-      @initial_content ||= @connector.get(initial_url)
+      @connector.get(initial_url)
     end
 
     protected
