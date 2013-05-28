@@ -3,7 +3,7 @@ namespace :meuvale do
   task :update_cards => :environment do
     updater_service = CardUpdater.new(Fetchers::VisaValeFetcher.new(Connectors::Connector.new))
 
-    since = 5.minutes.ago
+    since = 30.minutes.ago
     total_updated = updater_service.update_all_updated_before(since)
 
     puts "#{total_updated} card(s) updated before #{since} were updated."
