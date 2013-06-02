@@ -66,6 +66,16 @@ describe "Cards controller", :type => :controller do
 
   describe "visa vale" do
     describe "get with valid card number" do
+      before do
+        card = FactoryGirl.create(:card)
+        card.number = Enum::CardNumber::VISA_VALE_VALID_NUMBER
+        card.save
+
+        FactoryGirl.create(:card_transaction, card: card)
+        FactoryGirl.create(:card_transaction, card: card)
+        FactoryGirl.create(:card_transaction, card: card)
+      end
+
       it_behaves_like "visa vale card" do
         let(:response) { visit "cards/#{Card::TYPES[:visa_vale]}/#{Enum::CardNumber::VISA_VALE_VALID_NUMBER}.json" }
 

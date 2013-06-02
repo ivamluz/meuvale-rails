@@ -1,13 +1,17 @@
-class CardsController < ActionController::Base
+class CardsController < ApplicationController
   def show()    
     respond_to do |format|
       format.json do
         begin
-          fetcher = Fetchers::FetcherFactory.createByType(params[:type])
-          card = fetcher.fetch_card(params[:number])
+          Card::validate_number_format_by_type(params[:number], params[:type])
 
-          render :json => card
-        rescue Exceptions::InvalidCardNumberException,
+          card = Card.find(:first, :conditions => { number: params[:number], card_type: params[:type] }) || not_found
+
+          render :json => card.to_json(
+                :include => { :transactions => { :except => [:card_id, :created_at, :updated_at] } }
+              )
+        rescue ActionController::RoutingError,
+               Exceptions::InvalidCardNumberException,
                Exceptions::InvalidCardTypeException => ex
           logger.error ex
 
