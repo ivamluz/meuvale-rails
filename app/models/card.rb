@@ -24,7 +24,7 @@ class Card < ActiveRecord::Base
     TYPES[:visa_vale] => /^\d{16}$/
   }
 
-  has_many :transactions, :class_name => "CardTransaction"
+  has_many :transactions, :class_name => "CardTransaction", :order => 'card_transactions.date DESC, card_transactions.created_at DESC'
 
   attr_accessible :card_type, :number, :available_balance,
                   :last_charged_at, :last_charge_amount,

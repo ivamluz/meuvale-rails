@@ -8,7 +8,8 @@ class CardsController < ApplicationController
           card = Card.find(:first, :conditions => { number: params[:number], card_type: params[:type] }) || not_found
 
           render :json => card.to_json(
-                :include => { :transactions => { :except => [:card_id, :created_at, :updated_at] } }
+                :include => { :transactions => { :except => [:id, :card_id, :created_at, :updated_at] } },
+                :except => [ :id ]
               )
         rescue ActionController::RoutingError,
                Exceptions::InvalidCardNumberException,

@@ -15,6 +15,8 @@ describe "Cards controller", :type => :controller do
         json = JSON.parse(response.body)
         json.should_not be_nil
 
+        json.should_not include('id')
+
         json.should include('card_type')
         json['card_type'].class.should == String
 
@@ -39,7 +41,15 @@ describe "Cards controller", :type => :controller do
         json.should include('transactions')
         json['transactions'].class.should == Array
 
-        json['transactions'].each do |transaction|
+        json['transactions'].each_with_index do |transaction, i|
+          # Check is sorted by date, descending
+          if i > 0
+            transaction['date'].should be >= json['transactions'][i - 1]['date']
+          end
+
+
+          transaction.should_not include('id')
+
           transaction['description'].should_not be_nil
           transaction['date'].to_s.should match date_regex
           transaction['amount'].should match amount_regex
