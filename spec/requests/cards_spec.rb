@@ -43,10 +43,9 @@ describe "Cards controller", :type => :controller do
 
         json['transactions'].each_with_index do |transaction, i|
           # Check is sorted by date, descending
-          if i > 0
-            transaction['date'].should be >= json['transactions'][i - 1]['date']
+          if i > 0            
+            transaction['date'].should be <= json['transactions'][i - 1]['date']
           end
-
 
           transaction.should_not include('id')
 

@@ -12,6 +12,8 @@
 #
 
 class CardTransaction < ActiveRecord::Base
+  default_scope order('date DESC, created_at DESC')
+
   belongs_to :card
 
   attr_accessible :date, :description, :amount
